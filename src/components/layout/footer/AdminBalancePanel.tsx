@@ -13,7 +13,7 @@ const endpoint = '/api/educational-balances';
 const AdminBalancePanel = ({ onClose }: AdminBalancePanelProps) => {
     const { accountList } = useApiBase();
     const { overrides, refresh } = useEducationalBalances();
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState('5555');
     const [isUnlocked, setIsUnlocked] = useState(false);
     const [selectedId, setSelectedId] = useState(accountList?.[0]?.loginid ?? '');
     const [balance, setBalance] = useState('');

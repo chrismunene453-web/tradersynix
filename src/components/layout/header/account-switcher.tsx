@@ -6,6 +6,7 @@ import Text from '@/components/shared_ui/text';
 import { api_base } from '@/external/bot-skeleton/services/api/api-base';
 import { useApiBase } from '@/hooks/useApiBase';
 import { useStore } from '@/hooks/useStore';
+import { useEducationalBalances } from '@/contexts/educational-balance-context';
 import { isDemoAccount } from '@/utils/account-helpers';
 import { Localize } from '@deriv-com/translations';
 import { TAccountSwitcher } from './common/types';
@@ -17,6 +18,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const { accountList, activeLoginid } = useApiBase();
     const { client, run_panel } = useStore() ?? {};
+    const { overrides } = useEducationalBalances();
 
     const is_bot_running = run_panel?.is_running || api_base.is_running;
     const isSingleAccount = !accountList || accountList.length <= 1;
@@ -58,16 +60,21 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
             .map(account => ({
                 loginid: account.loginid,
                 currency: account.currency,
-                balance: addComma(Number(account.balance ?? 0).toFixed(getDecimalPlaces(account.currency))),
+                balance: addComma(
+                    Number(overrides[account.loginid]?.balance ?? account.balance ?? 0).toFixed(
+                        getDecimalPlaces(account.currency)
+                    )
+                ),
+                isEducational: Boolean(overrides[account.loginid]),
                 isVirtual: isDemoAccount(account.loginid),
                 isActive: account.loginid === activeLoginid,
             }))
             .sort((a, b) => (a.isActive ? -1 : b.isActive ? 1 : 0));
-    }, [accountList, activeLoginid]);
+    }, [accountList, activeLoginid, overrides]);
 
     if (!activeAccount) return null;
 
-    const { currency, isVirtual, balance } = activeAccount;
+    const { currency, isVirtual, balance, isEducational } = activeAccount;
     const showChevron = !isSingleAccount && !is_bot_running;
 
     return (
@@ -134,6 +141,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                                         `${balance} ${getCurrencyDisplayCode(currency)}`
                                     )}
                                 </p>
+                                {isEducational && <span className='acc-info__simulation-badge'>SIMULATED</span>}
                             </div>
                         )}
                     </div>
@@ -178,6 +186,7 @@ const AccountSwitcher = observer(({ activeAccount }: TAccountSwitcher) => {
                                     <Localize i18n_default_text='No currency assigned' />
                                 )}
                             </Text>
+                            {account.isEducational && <span className='acc-info__simulation-badge'>SIMULATED</span>}
                         </div>
                     ))}
                 </div>

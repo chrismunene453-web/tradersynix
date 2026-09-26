@@ -5,6 +5,7 @@ import { isVirtualAccount } from '@/utils/account-helpers';
 import { CurrencyIcon } from '@/components/currency/currency-icon';
 import { addComma, getDecimalPlaces } from '@/components/shared';
 import { useApiBase } from '@/hooks/useApiBase';
+import { useEducationalBalances } from '@/contexts/educational-balance-context';
 import { Balance } from '@deriv/api-types';
 
 /** A custom hook that returns the account object for the current active account. */
@@ -16,6 +17,7 @@ const useActiveAccount = ({
     directBalance?: string;
 }) => {
     const { accountList, activeLoginid } = useApiBase();
+    const { overrides } = useEducationalBalances();
 
     const activeAccount = useMemo(
         () => accountList?.find(account => account.loginid === activeLoginid),
@@ -23,6 +25,7 @@ const useActiveAccount = ({
     );
 
     const currentBalanceData = allBalanceData?.accounts?.[activeAccount?.loginid ?? ''];
+    const educationalOverride = activeAccount ? overrides[activeAccount.loginid] : undefined;
 
     const modifiedAccount = useMemo(() => {
         if (!activeAccount) return undefined;
@@ -32,7 +35,9 @@ const useActiveAccount = ({
 
         return {
             ...activeAccount,
-            balance: currentBalanceData?.balance
+            balance: educationalOverride
+                ? addComma(educationalOverride.balance.toFixed(getDecimalPlaces(activeAccount.currency)))
+                : currentBalanceData?.balance
                 ? addComma(currentBalanceData.balance.toFixed(getDecimalPlaces(currentBalanceData.currency)))
                 : directBalance
                   ? addComma(parseFloat(directBalance).toFixed(getDecimalPlaces(activeAccount.currency)))
@@ -41,9 +46,10 @@ const useActiveAccount = ({
             icon: <CurrencyIcon currency={activeAccount?.currency?.toLowerCase()} isVirtual={isVirtual} />,
             isVirtual: isVirtual,
             isActive: activeAccount?.loginid === activeLoginid,
+            isEducational: Boolean(educationalOverride),
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeAccount, activeLoginid, allBalanceData, directBalance]);
+    }, [activeAccount, activeLoginid, allBalanceData, directBalance, educationalOverride]);
 
     return {
         /** User's current active account. */

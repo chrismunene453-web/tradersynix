@@ -8,6 +8,7 @@ import RoutePromptDialog from '@/components/route-prompt-dialog';
 import { useAccountSwitching } from '@/hooks/useAccountSwitching';
 import { useLanguageFromURL } from '@/hooks/useLanguageFromURL';
 import { StoreProvider } from '@/hooks/useStore';
+import { EducationalBalanceProvider } from '@/contexts/educational-balance-context';
 import { isPreviewMode, PREVIEW_BASE_PATH } from '@/utils/is-preview-mode';
 import { localize, TranslationProvider } from '@deriv-com/translations';
 import CoreStoreProvider from './CoreStoreProvider';
@@ -45,7 +46,9 @@ const router = createBrowserRouter(
                                 <LocalStorageSyncWrapper>
                                     <RoutePromptDialog />
                                     <CoreStoreProvider>
-                                        <Layout />
+                                        <EducationalBalanceProvider>
+                                            <Layout />
+                                        </EducationalBalanceProvider>
                                     </CoreStoreProvider>
                                 </LocalStorageSyncWrapper>
                             </StoreProvider>

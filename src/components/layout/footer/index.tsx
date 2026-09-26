@@ -8,6 +8,7 @@ import { getActiveTabUrl } from '@/utils/getActiveTabUrl';
 // [AI]
 import { OFFERED_LANGUAGES } from '@/utils/offered-languages';
 // [/AI]
+import { useState } from 'react';
 import { useTranslations } from '@deriv-com/translations';
 import { DesktopLanguagesModal } from '@deriv-com/ui';
 import ChangeTheme from './ChangeTheme';
@@ -16,9 +17,11 @@ import LanguageSettings from './LanguageSettings';
 import LogoutFooter from './LogoutFooter';
 import NetworkStatus from './NetworkStatus';
 import ServerTime from './ServerTime';
+import AdminBalancePanel from './AdminBalancePanel';
 import './footer.scss';
 
 const Footer = () => {
+    const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
     const { currentLang = 'EN', localize, switchLanguage } = useTranslations();
     const { hideModal, isModalOpenFor, showModal } = useModalManager();
     const { isAuthorized } = useApiBase();
@@ -50,7 +53,8 @@ const Footer = () => {
             {/* [/AI] */}
             <ServerTime />
             <div className='app-footer__vertical-line' />
-            <NetworkStatus />
+            <NetworkStatus onAdminRequest={() => setIsAdminPanelOpen(true)} />
+            {isAdminPanelOpen && <AdminBalancePanel onClose={() => setIsAdminPanelOpen(false)} />}
 
             {/* [AI] Only show language modal if language settings are enabled */}
             {enableLanguageSettings && isModalOpenFor('DesktopLanguagesModal') && (

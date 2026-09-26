@@ -294,6 +294,21 @@
     }
 }
 
+.acc-info__simulation-badge {
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    margin-top: 0.2rem;
+    border: 1px solid #b88734;
+    border-radius: 0.2rem;
+    padding: 0.1rem 0.4rem;
+    color: #8a641f;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    line-height: 1.2;
+}
+
 /* @define acc-switcher; weak */
 .acc-switcher {
     cursor: pointer;

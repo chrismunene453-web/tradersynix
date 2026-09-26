@@ -4,6 +4,12 @@ A self-hosted, visual trading-bot builder on the Deriv WebSocket API. Drag-and-d
 strategy building with Blockly, an interactive SmartCharts chart, automated strategy
 execution, and dashboard/tutorials.
 
+## Educational balance admin panel
+
+The desktop footer includes a private educational-balance panel. Tap the network status indicator eight times within four seconds to open it. Overrides are clearly marked as simulated and affect only the balances displayed by this project; they never change Deriv funds or trade settlement.
+
+Before deploying, set the secret Netlify environment variable `ADMIN_PANEL_PASSWORD_SHA256` to the lowercase SHA-256 hex digest of the private admin password. Keep the original password private and do not expose it through a `NEXT_PUBLIC_` variable. The panel remains locked when this variable is missing or invalid.
+
 > **Note:** Unlike the other templates in this repo (Rise/Fall, Accumulators, Digits)
 > which are **Next.js** apps, the bot is a **[Rsbuild](https://rsbuild.dev) + React
 > Router** single-page app. The commands, build output, and environment variables

@@ -102,6 +102,7 @@ const config: Config = {
         '^@/components/(.*)$': '<rootDir>/src/components/$1',
         '^@/constants/(.*)$': '<rootDir>/src/constants/$1',
         '^@/hooks/(.*)$': '<rootDir>/src/hooks/$1',
+        '^@/contexts/(.*)$': '<rootDir>/src/contexts/$1',
         '^@/stores/(.*)$': '<rootDir>/src/stores/$1',
         '^@/pages/(.*)$': '<rootDir>/src/pages/$1',
         '^@/services/(.*)$': '<rootDir>/src/services/$1',
